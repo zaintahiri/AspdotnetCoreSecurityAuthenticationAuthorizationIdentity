@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AspdotnetCoreSecurityAuthenticationAuthorizationIdentity.Pages
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
@@ -15,6 +17,10 @@ namespace AspdotnetCoreSecurityAuthenticationAuthorizationIdentity.Pages
         public void OnGet()
         {
 
+        }
+        public void OnPost()
+        { 
+        
         }
     }
 }

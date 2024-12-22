@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -13,20 +14,32 @@ namespace AspdotnetCoreSecurityAuthenticationAuthorizationIdentity.Pages.Account
         {
 
         }
-        public void OnPost()
+        public async Task<IActionResult> OnPost()
         {
-            if (ModelState.IsValid) return;
+            if (!ModelState.IsValid) return Page();
 
             if (Credential.Username == "Admin" && Credential.Password == "Password")
             {
                 var claims = new List<Claim> {
-                new Claim(ClaimTypes.Name,"Admin"),
-                new Claim(ClaimTypes.Email,"admin@gmail.com")
+                    new Claim(ClaimTypes.Name,"Admin"),
+                    new Claim(ClaimTypes.Email,"admin@gmail.com"),
+                    //this claim is for Department(HR), REGISTER CLAIM IN PROGRAM FILE SERVICE
+                    //holder.Services.AddAuthorization,
+                    //with police options.AddPolicy("name of police", policy=>policy.RequireClaim("Department","HR"))
+                    new Claim("Department","HR"),
+                    new Claim("Admin","true")
+
+
                 };
 
-                var identity=new ClaimsIdentity(claims,"MyClaims");
+                var identity=new ClaimsIdentity(claims,"MyCookieAuth");
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync("MyCookieAuth", principal);
+                return RedirectToPage("/Index");
             }
+
+            return Page();
             
         }
     }

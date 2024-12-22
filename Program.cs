@@ -1,3 +1,6 @@
+using AspdotnetCoreSecurityAuthenticationAuthorizationIdentity.Authorization;
+using Microsoft.AspNetCore.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,6 +19,8 @@ builder.Services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", opt
     // then error page should be shown
     options.AccessDeniedPath = "/Account/AccessDenied";
 
+    options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
+
 });
 // how to add policy for any page who can access the page, only authorized person
 builder.Services.AddAuthorization(options =>
@@ -28,8 +33,12 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Admin"));
     options.AddPolicy("HRManagerOnly", policy => policy.RequireClaim("Manager")
-                                                        .RequireClaim("Department","HR"));
+                                                        .RequireClaim("Department","HR")
+                                                        .Requirements.Add(new HRManagerProbationRequirement(3)));
 });
+builder.Services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

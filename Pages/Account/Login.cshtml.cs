@@ -30,6 +30,7 @@ namespace AspdotnetCoreSecurityAuthenticationAuthorizationIdentity.Pages.Account
                     new Claim("Admin","true"),
                     new Claim("HRManager","true"),
                     new Claim("Manager","true"),
+                    new Claim("EmployeementDate","2024-05-12"),
 
 
 
@@ -39,7 +40,11 @@ namespace AspdotnetCoreSecurityAuthenticationAuthorizationIdentity.Pages.Account
                 var identity=new ClaimsIdentity(claims,"MyCookieAuth");
                 ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
-                await HttpContext.SignInAsync("MyCookieAuth", principal);
+                var authenticationProperties = new AuthenticationProperties
+                {
+                    IsPersistent=Credential.RememberMe
+                };
+                await HttpContext.SignInAsync("MyCookieAuth", principal,authenticationProperties);
                 return RedirectToPage("/Index");
             }
 
@@ -57,5 +62,8 @@ namespace AspdotnetCoreSecurityAuthenticationAuthorizationIdentity.Pages.Account
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        [Display(Name = "Remember Me")]
+        public bool RememberMe { get; set; }
     }
 }

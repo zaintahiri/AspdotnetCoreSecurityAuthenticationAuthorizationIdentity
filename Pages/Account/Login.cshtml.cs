@@ -27,7 +27,11 @@ namespace AspdotnetCoreSecurityAuthenticationAuthorizationIdentity.Pages.Account
                     //holder.Services.AddAuthorization,
                     //with police options.AddPolicy("name of police", policy=>policy.RequireClaim("Department","HR"))
                     new Claim("Department","HR"),
-                    new Claim("Admin","true")
+                    new Claim("Admin","true"),
+                    new Claim("HRManager","true"),
+                    new Claim("Manager","true"),
+
+
 
 
                 };
